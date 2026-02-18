@@ -5,6 +5,7 @@ import { InvoiceStatus } from "@prisma/client"
 import { db } from "@/lib/db"
 import { requireAuth } from "@/lib/tenant"
 import { invoiceCreateSchema, invoiceUpdateSchema, invoiceItemSchema } from "@/lib/validations/invoice"
+import { audit } from "@/lib/audit"
 
 // ─── Helpers ──────────────────────────────────────────────────
 
@@ -258,6 +259,15 @@ export async function createInvoice(data: unknown) {
     return created
   })
 
+  await audit({
+    tenantId,
+    userId: session.user.id,
+    action: "invoice.created",
+    entity: "Invoice",
+    entityId: invoice.id,
+    meta: { number: invoice.number, total: Number(invoice.total), currency: invoice.currency },
+  })
+
   revalidatePath("/[locale]/invoices")
   return serializeInvoice(invoice)
 }
@@ -460,6 +470,15 @@ export async function updateInvoiceStatus(id: string, status: InvoiceStatus) {
     })
   })
 
+  await audit({
+    tenantId,
+    userId: session.user.id,
+    action: `invoice.status_${status}`,
+    entity: "Invoice",
+    entityId: id,
+    meta: { from: existing.status, to: status, number: existing.number },
+  })
+
   revalidatePath("/[locale]/invoices")
   return serializeInvoice(invoice)
 }
@@ -506,6 +525,15 @@ export async function deleteInvoice(id: string) {
       where: { id, tenantId },
       data: { deletedAt: new Date() },
     })
+  })
+
+  await audit({
+    tenantId,
+    userId: session.user.id,
+    action: "invoice.deleted",
+    entity: "Invoice",
+    entityId: id,
+    meta: { number: existing.number },
   })
 
   revalidatePath("/[locale]/invoices")

@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { useTranslations, useLocale } from "next-intl"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, Send, CheckCircle2, AlertCircle, Trash2, Ban } from "lucide-react"
+import { ArrowLeft, Send, CheckCircle2, AlertCircle, Trash2, Ban, Download } from "lucide-react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -156,6 +156,14 @@ export function InvoiceDetailClient({ invoice }: InvoiceDetailProps) {
 
         {/* Actions */}
         <div className="flex flex-wrap gap-2">
+          <Button
+            variant="outline"
+            onClick={() => window.open(`/api/invoices/${invoice.id}/pdf`, "_blank")}
+            className="min-h-11 gap-1.5"
+          >
+            <Download className="h-4 w-4" />
+            PDF
+          </Button>
           {invoice.status === "draft" && (
             <>
               <Button onClick={() => handleStatusChange("sent")} className="min-h-11 gap-1.5">

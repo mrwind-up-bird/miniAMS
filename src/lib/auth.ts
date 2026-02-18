@@ -2,6 +2,7 @@ import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import { compare } from "bcryptjs"
 import { db } from "./db"
+import { rateLimit } from "./rate-limit"
 import "@/types"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -14,8 +15,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null
 
+        // Rate limit login attempts per email (10 per minute)
+        const email = (credentials.email as string).toLowerCase()
+        const { allowed } = rateLimit(`login:${email}`, { limit: 10, windowMs: 60_000 })
+        if (!allowed) return null
+
         const user = await db.user.findFirst({
-          where: { email: credentials.email as string },
+          where: { email },
         })
 
         if (!user) return null

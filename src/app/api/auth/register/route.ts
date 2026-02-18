@@ -1,7 +1,8 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { hash } from "bcryptjs"
 import { z } from "zod"
 import { db } from "@/lib/db"
+import { rateLimit } from "@/lib/rate-limit"
 
 const registerSchema = z.object({
   name: z.string().min(1).max(100),
@@ -16,8 +17,14 @@ const registerSchema = z.object({
   companyName: z.string().min(1).max(100),
 })
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
+    const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown"
+    const { allowed } = rateLimit(`register:${ip}`, { limit: 5, windowMs: 60_000 })
+    if (!allowed) {
+      return NextResponse.json({ error: "Too many requests" }, { status: 429 })
+    }
+
     let body: unknown
     try {
       body = await req.json()

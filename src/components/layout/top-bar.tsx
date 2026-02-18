@@ -3,7 +3,8 @@
 import { useTranslations, useLocale } from "next-intl"
 import { useRouter, usePathname } from "next/navigation"
 import { signOut } from "next-auth/react"
-import { LogOut, Globe, User } from "lucide-react"
+import { useTheme } from "next-themes"
+import { LogOut, Globe, User, Moon, Sun } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -19,6 +20,7 @@ export function TopBar({ userName }: { userName?: string }) {
   const locale = useLocale()
   const pathname = usePathname()
   const router = useRouter()
+  const { theme, setTheme } = useTheme()
   const otherLocale = locale === "de" ? "en" : "de"
 
   const switchLocale = () => {
@@ -38,6 +40,17 @@ export function TopBar({ userName }: { userName?: string }) {
       <div className="flex-1">
         <span className="text-lg font-bold md:hidden">miniAMS</span>
       </div>
+
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-8 w-8"
+        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      >
+        <Sun className="h-4 w-4 rotate-0 scale-100 transition-transform dark:-rotate-90 dark:scale-0" />
+        <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-transform dark:rotate-0 dark:scale-100" />
+        <span className="sr-only">Toggle theme</span>
+      </Button>
 
       <Button
         variant="ghost"
