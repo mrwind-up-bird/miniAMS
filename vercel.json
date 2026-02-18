@@ -3,9 +3,5 @@
   "framework": "nextjs",
   "buildCommand": "npx prisma generate && next build",
   "installCommand": "npm install",
-  "regions": ["fra1"],
-  "env": {
-    "AUTH_SECRET": "@auth-secret",
-    "DATABASE_URL": "@database-url"
-  }
+  "regions": ["fra1"]
 }
