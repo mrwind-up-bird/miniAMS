@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: miniams-db
+    restart: unless-stopped
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: miniams
+      POSTGRES_USER: miniams
+      POSTGRES_PASSWORD: miniams-dev
+    volumes:
+      - miniams-pgdata:/var/lib/postgresql/data
+
+volumes:
+  miniams-pgdata:
