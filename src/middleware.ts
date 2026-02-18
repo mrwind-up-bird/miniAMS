@@ -29,7 +29,7 @@ export default async function middleware(req: NextRequest) {
   const locale =
     pathname.match(/^\/(en|de)/)?.[1] || routing.defaultLocale
 
-  const token = await getToken({ req })
+  const token = await getToken({ req, secret: process.env.AUTH_SECRET })
 
   // Redirect authenticated users away from auth pages
   if (isAuthPage && token) {
