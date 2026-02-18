@@ -61,4 +61,4 @@ jobs:
         run: npm run build
         env:
           DATABASE_URL: "postgresql://placeholder:placeholder@localhost:5432/placeholder"
-          NEXTAUTH_SECRET: "ci-build-secret-not-real"
+          AUTH_SECRET: "ci-build-secret-not-real"

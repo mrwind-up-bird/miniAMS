@@ -424,7 +424,7 @@ miniAMS is optimized for Vercel with managed PostgreSQL.
 | Variable         | Description                    |
 |-----------------|--------------------------------|
 | `DATABASE_URL`  | PostgreSQL connection string   |
-| `NEXTAUTH_SECRET` | JWT signing secret (32+ chars) |
+| `AUTH_SECRET` | JWT signing secret (32+ chars) |
 
 ### Deploy to Vercel
 

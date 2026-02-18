@@ -28,7 +28,7 @@ Edit `.env` with your values:
 
 ```env
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/miniams"
-NEXTAUTH_SECRET="your-secret-key-min-32-chars-long-here"
+AUTH_SECRET="your-secret-key-min-32-chars-long-here"
 NEXTAUTH_URL="http://localhost:3000"
 ```
 
@@ -95,7 +95,7 @@ vercel
 
 # Set environment variables in Vercel dashboard:
 # - DATABASE_URL (your managed PostgreSQL connection string)
-# - NEXTAUTH_SECRET (same as local or generate new)
+# - AUTH_SECRET (same as local or generate new)
 ```
 
 ## Troubleshooting
